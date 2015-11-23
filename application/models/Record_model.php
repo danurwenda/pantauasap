@@ -19,8 +19,10 @@ class Record_model extends CI_Model {
     }
 
     public function getRecords($sensor_id, $from, $to) {
-        return $this->db->select('location[0] as lat, location[1] as lon, iaq, pm10, recorded_timestamp',false)
-                        ->where('sensor_id', $sensor_id)
+        if ($sensor_id != 0) {
+            $this->db->where('sensor_id', $sensor_id);
+        }
+        return $this->db->select('location[0] as lat, location[1] as lon, iaq, pm10, tvoc, co2, pm25, temperature, humidity, recorded_timestamp, sensor_id', false)
                         ->where("recorded_timestamp>to_timestamp($from)", null, false)
                         ->where("recorded_timestamp<to_timestamp($to)", null, false)
                         ->get('record')

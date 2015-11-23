@@ -17,6 +17,10 @@ class Device_model extends CI_Model {
     public function __construct() {
         parent::__construct();
     }
+    
+    public function get_all(){
+        return $this->db->get('sensor')->result();
+    }
 
     public function get_by_mac($mac) {
         $q = $this->db->get_where('sensor', array('mac' => $mac));

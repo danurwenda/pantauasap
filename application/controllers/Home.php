@@ -24,7 +24,9 @@ class Home extends CI_Controller {
     }
 
     public function history($id = 1) {
-        $this->template->display('history', array('page' => 2, 'id' => $id));
+        $data['devices']=$this->device_model->get_all();
+        $data['page']=2;
+        $this->template->display('history', $data);
     }
 
 }
