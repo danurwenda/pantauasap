@@ -14,18 +14,7 @@ function getTitle(point) {
 
 function getCircle(point) {
     var iaq = parseInt(point.iaq);
-    var colortemp = 'black';
-    if (iaq > 200) {
-        colortemp = '#800080';
-    } else if (iaq > 150) {
-        colortemp = '#FF4500';
-    } else if (iaq > 100) {
-        colortemp = '#FFA500';
-    } else if (iaq > 50) {
-        colortemp = '#FFFF00';
-    } else {
-        colortemp = '#9ACD32';
-    }
+    var colortemp = getColor('iaq',iaq);
     var circle = {
         path: google.maps.SymbolPath.CIRCLE,
         fillColor: colortemp,
