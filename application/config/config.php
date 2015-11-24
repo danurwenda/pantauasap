@@ -17,7 +17,7 @@ defined('BASEPATH') OR exit('No direct script access allowed');
 | environments.
 |
 */
-$config['base_url'] = 'http://118.97.100.60/asap/';
+$config['base_url'] = 'http://localhost/pantauasap/';
 
 /*
 |--------------------------------------------------------------------------

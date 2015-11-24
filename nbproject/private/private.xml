@@ -10,5 +10,16 @@
             <file>file:/C:/xampp/htdocs/asap/application/controllers/Device.php</file>
             <file>file:/C:/xampp/htdocs/asap/application/models/Device_model.php</file>
         </group>
+        <group name="asap">
+            <file>file:/C:/xampp/htdocs/pantauasap/application/models/Device_model.php</file>
+            <file>file:/C:/xampp/htdocs/pantauasap/application/views/front/template.php</file>
+            <file>file:/C:/xampp/htdocs/pantauasap/application/models/Record_model.php</file>
+            <file>file:/C:/xampp/htdocs/pantauasap/application/controllers/Device.php</file>
+            <file>file:/C:/xampp/htdocs/pantauasap/.gitignore</file>
+            <file>file:/C:/xampp/htdocs/pantauasap/application/views/front/history.php</file>
+            <file>file:/C:/xampp/htdocs/pantauasap/application/config/database.php</file>
+            <file>file:/C:/xampp/htdocs/pantauasap/application/config/config.php</file>
+            <file>file:/C:/xampp/htdocs/pantauasap/application/controllers/Home.php</file>
+        </group>
     </open-files>
 </project-private>
