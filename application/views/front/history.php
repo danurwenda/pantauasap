@@ -3,6 +3,7 @@ echo css_asset('bootstrap-datetimepicker.css', 'ace');
 echo js_asset('date-time/moment.js', 'ace');
 echo js_asset('date-time/bs3-dtp4.js', 'ace');
 echo js_asset('jquery.easypiechart.js', 'ace');
+echo js_asset('jsclusterer/src/markerclusterer_compiled.js', 'deputi3');
 ?>
 <style>
     html, body, #map { margin: 0; padding: 0; height: 100%; }
@@ -97,7 +98,7 @@ echo js_asset('jquery.easypiechart.js', 'ace');
     src="https://maps.googleapis.com/maps/api/js?libraries=visualization">
 </script>
 <script type="text/javascript" src="http://google-maps-utility-library-v3.googlecode.com/svn/trunk/infobox/src/infobox.js"></script>
-<?php echo js_asset('history.js','deputi3');?>
+<?php echo js_asset('history.js', 'deputi3'); ?>
 <!-- #section:settings.box -->
 <div class="ace-settings-container" id="ace-settings-container">
     <div class="btn btn-app btn-xs btn-warning ace-settings-btn open" id="ace-settings-btn">

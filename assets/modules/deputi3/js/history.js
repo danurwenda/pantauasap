@@ -9,12 +9,12 @@ function initialize() {
 }
 
 function getTitle(point) {
-    return 'dummy';
+    return 'IAQ : '+point.iaq;
 }
 
 function getCircle(point) {
     var iaq = parseInt(point.iaq);
-    var colortemp = getColor('iaq',iaq);
+    var colortemp = getColor('iaq', iaq);
     var circle = {
         path: google.maps.SymbolPath.CIRCLE,
         fillColor: colortemp,
@@ -220,6 +220,7 @@ jQuery(function ($) {
                 $.each(points, function (i, rec) {
                     addMarker(rec);
                 });
+                var markerCluster = new MarkerClusterer(map, markers);
             });
         }
     }

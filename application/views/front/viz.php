@@ -17,7 +17,7 @@ echo js_asset('date-time/bs3-dtp4.js', 'ace');
     function initialize() {
         map = new google.maps.Map(document.getElementById('map'), {
             zoom: 5,
-            center: new google.maps.LatLng(-3.162, 113.730),
+            center: new google.maps.LatLng(-2.54, 117.24),
             mapTypeId: google.maps.MapTypeId.TERRAIN
         });
 
