@@ -22,7 +22,7 @@ echo js_asset('date-time/bs3-dtp4.js', 'ace');
         });
 
         var script = document.createElement('script');
-        script.src = 'http://118.97.100.60/asap/index.php/Vizu/showLatestGeoJson';
+        script.src = base_url+'index.php/Vizu/showLatestGeoJson';
         //script.src = 'http://yuns-macbook-pro.local/~yunhariadi/wisdome/index.php/Vizu/showLatestGeoJson';
         document.getElementsByTagName('head')[0].appendChild(script);
     }
@@ -73,7 +73,7 @@ echo js_asset('date-time/bs3-dtp4.js', 'ace');
             var latLng = new google.maps.LatLng(coords[1], coords[0]);
             var diaq = results.features[i].properties.iaq;
             var iddevice = results.features[i].properties.id;
-            var contentString = '<a href="http://118.97.100.60/asap/index.php/chart/' + iddevice + '" target="_blank">Device#' + iddevice + '</a></br> \n\
+            var contentString = '<a href="'+base_url+'index.php/chart/' + iddevice + '" target="_blank">Device#' + iddevice + '</a></br> \n\
                                 iAQ : ' + results.features[i].properties.iaq + ' pm10 :' + results.features[i].properties.pm10 + '</br>Recorded :</br>' + results.features[i].properties.recorded + '</br><a href="index.php/Peta/history/' + iddevice + '" >History#' + iddevice + '</a></br> ';
             createMarker(latLng, contentString, diaq);
         }
@@ -104,7 +104,7 @@ echo js_asset('date-time/bs3-dtp4.js', 'ace');
             var from = $('#date-timepicker-from').data('DateTimePicker').date();
             var to = $('#date-timepicker-to').data('DateTimePicker').date();
             if (from != null && to != null) {
-                $.getJSON('http://118.97.100.60/asap/index.php/device/get_average/' + from + '/' + to, function (data) {
+                $.getJSON(base_url+'index.php/device/get_average/' + from + '/' + to, function (data) {
                     var $panel = $('#average-panel');
                     $panel.find('#num').html(data.num);
                     if (data.num > 0) {

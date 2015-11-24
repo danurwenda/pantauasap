@@ -79,8 +79,8 @@ class Data_model extends CI_Model {
     }
 
     public function getLatestGeoJson() {
-        $xdef = 109.27;
-        $ydef = -4.74;
+        $xdef = 106.82197;
+        $ydef = -6.17498;
         $query = $this->db->query('select * from sensor');
         $datatemp = array();
         $texttemp = '';
@@ -102,8 +102,8 @@ class Data_model extends CI_Model {
     }
 
     public function getHistoryID($sensorid) {
-        $xdef = 109.27;
-        $ydef = -4.74;
+        $xdef = 106.8219;
+        $ydef = -6.1749;
 //$locX = $xdef;
 //        $locY = $ydef;
         $texttemp = '';
