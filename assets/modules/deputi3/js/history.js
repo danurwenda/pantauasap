@@ -133,7 +133,7 @@ var params = [
     'humidity'
 ], displayname = [
     'IAQ (index)',
-    'TVOC (index)',
+    'TVOC (PPB)',
     'CO<sub>2</sub> (PPM)',
     'PM2.5 (μg/m<sup>3</sup>)',
     'PM10  (μg/m<sup>3</sup>)',
