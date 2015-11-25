@@ -15,6 +15,9 @@ class Device extends CI_Controller {
         $to = $to / 1000;
 //        $records = $this->record_model->getRecords($device, 1447214580, 1447261380);
         $records = $this->record_model->getRecords($device, $from, $to);
+        foreach($records as $r){
+            $r->temperature = ($r->temperature-4000)/100;
+        }
         echo json_encode($records);
     }
 

@@ -44,54 +44,24 @@ echo js_asset('jsclusterer/src/markerclusterer_compiled.js', 'deputi3');
     <div id="infobox-main">
         <div class="row" style="margin-bottom:10px">
             <div class="col-xs-4 center" style="margin-top:30px">
-                <span style="font-size: 21px">IAQ</span>
+                <span style="font-size: 21px" id="main-title"></span>
             </div>
             <div class="col-xs-4 center">
-                <div class="easy-pie-chart percentage" data-percent="100" id="iaq-pie">
-                    <span class="percent infobox-data-number" id="iaq-value"></span>
+                <div class="easy-pie-chart percentage" data-percent="100" id="main-pie">
+                    <span class="percent infobox-data-number" id="main-value"></span>
                 </div>
             </div>
-            <div class="col-xs-4" id="iaq-remark"></div>
+            <div class="col-xs-4" id="main-remark"></div>
         </div>
         <div class="infobox-container" id="infobox2">
             <!-- #section:pages/dashboard.infobox -->
             <div class="infobox">
                 <div class="infobox-data">
-                    <span class="infobox-data-number" id="co2-value"></span>
+                    <span class="infobox-data-number" id="value"></span>
                     <div class="infobox-content">CO<sub>2</sub></div>
                 </div>
             </div>
-            <div class="infobox">
-                <div class="infobox-data">
-                    <span class="infobox-data-number" id="pm25-value"></span>
-                    <div class="infobox-content">PM2.5</div>
-                </div>
-            </div>
-            <div class="infobox">
-                <div class="infobox-data">
-                    <span class="infobox-data-number" id="pm10-value"></span>
-                    <div class="infobox-content">PM10</div>
-                </div>
-            </div>
-            <div class="infobox">
-                <div class="infobox-data">
-                    <span class="infobox-data-number" id="temp-value"></span>
-                    <div class="infobox-content">Temperature</div>
-                </div>
-            </div>
-            <div class="infobox">
-                <div class="infobox-data">
-                    <span class="infobox-data-number" id="hum-value"></span>
-                    <div class="infobox-content">Humidity</div>
-                </div>
-            </div>
-            <div class="infobox">
-                <div class="infobox-data">
-                    <span class="infobox-data-number" id="tvoc-value"></span>
-                    <div class="infobox-content">TVOC</div>
-                </div>
-            </div>
-        </div>        
+        </div>
     </div>
 </div>
 <script
@@ -123,14 +93,14 @@ echo js_asset('jsclusterer/src/markerclusterer_compiled.js', 'deputi3');
 
                 <div class="widget-body">
                     <div class="widget-main no-padding">
-                        <select class="form-control" id="params">
-                            <option value="iaq">IAQ</option>
-                            <option value="tvoc">TVOC</option>
-                            <option value="co2">CO<sub>2</sub></option>
-                            <option value="pm25">PM2.5</option>
-                            <option value="pm10">PM10</option>
-                            <option value="temp">Temperature</option>
-                            <option value="hum">Humidity</option>                                                    
+                        <select class="form-control" id="sensorparam">
+                            <option value="0">IAQ</option>
+                            <option value="1">TVOC</option>
+                            <option value="2">CO<sub>2</sub></option>
+                            <option value="3">PM2.5</option>
+                            <option value="4">PM10</option>
+                            <option value="5">Temperature</option>
+                            <option value="6">Humidity</option>
                         </select>
                     </div><!-- /.widget-main -->
                 </div><!-- /.widget-body -->
@@ -160,7 +130,7 @@ echo js_asset('jsclusterer/src/markerclusterer_compiled.js', 'deputi3');
                                 <option value="<?php echo $did; ?>"><?php echo $did; ?></option>
                                 <?php
                             }
-                            ?>                          
+                            ?>
                         </select>
                     </div><!-- /.widget-main -->
                 </div><!-- /.widget-body -->
@@ -196,6 +166,68 @@ echo js_asset('jsclusterer/src/markerclusterer_compiled.js', 'deputi3');
                                 <i class="fa fa-clock-o bigger-110"></i>
                             </span>
                         </div>
+                    </div><!-- /.widget-main -->
+                </div><!-- /.widget-body -->
+            </div>
+            <div class="widget-box transparent">
+                <div class="widget-header widget-header-flat">
+                    <h4 class="widget-title lighter">
+                        <!--<i class="ace-icon fa fa-star orange"></i>-->
+                        Legend
+                    </h4>
+
+                    <div class="widget-toolbar">
+                        <a href="#" data-action="collapse">
+                            <i class="ace-icon fa fa-chevron-up"></i>
+                        </a>
+                    </div>
+                </div>
+                <style>
+                    .legend {
+                        margin: 0;
+                        margin-top:20px;
+                        margin-bottom: 20px;
+                        padding: 20px 0 0;
+                        clear: both;
+                        font-size: 12px;
+                        font-weight: normal;
+                        color: #000;
+                        height: 20px;
+                    }
+                    .legend li {
+                        display: block;
+                        float: left;
+                        position: relative;
+                        height: 20px;
+                    }
+                    .legend li span {
+                        white-space: nowrap;
+                        color: #858585;
+                    }
+                    .legend li .start {
+                        position: absolute;
+                        top: -40px;
+                        left: -10px;
+                    }
+                    .legend .odd .start {
+                        bottom: 0px;
+                        top: auto;
+                    }
+                    .legend .lowest .start {
+                        left: 0;
+                    }
+                    .legend .highest .end {
+                        position:absolute;
+                        right: 0;
+                    }
+                    .legend .odd .end{
+                        top:-40px;
+                    }
+                </style>
+                <div class="widget-body">
+                    <div class="widget-main no-padding">
+                        <ul class="legend">
+                        </ul>
                     </div><!-- /.widget-main -->
                 </div><!-- /.widget-body -->
             </div>

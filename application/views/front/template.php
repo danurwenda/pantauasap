@@ -3,14 +3,14 @@
     <head>
         <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1" />
         <meta charset="utf-8" />
-        <title>Dashboard - PantauAsap</title>
+        <title>Dashboard - PantauISPU</title>
 
         <meta name="description" content="overview &amp; stats" />
         <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0" />
 
         <!-- bootstrap & fontawesome -->
         <?php echo css_asset('bootstrap.css', 'ace'); ?>
-        <?php echo css_asset('font-awesome.css', 'ace'); ?>
+        <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.5.0/css/font-awesome.min.css">
 
         <!-- page specific plugin styles -->
 
@@ -72,8 +72,8 @@
                     <!-- #section:basics/navbar.layout.brand -->
                     <a href="#" class="navbar-brand">
                         <small>
-                            <i class="fa fa-cloud"></i>
-                            Pantau Asap
+                            <i class="fa fa-lg fa-mixcloud"></i>
+                            PantauISPU
                         </small>
                     </a>
 

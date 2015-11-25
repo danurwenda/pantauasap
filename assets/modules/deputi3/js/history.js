@@ -1,20 +1,34 @@
-var map;
+var map, markerCluster;
+// array of reference of all markers
+var markers = [];
 
 function initialize() {
+    var cookieZoom = ace.cookie.get('history-zoom')
+            , cookieCenterLat = ace.cookie.get('history-center-lat')
+            , cookieCenterLon = ace.cookie.get('history-center-lon');
     map = new google.maps.Map(document.getElementById('map'), {
-        zoom: 5,
-        center: new google.maps.LatLng(-3.162, 113.730),
+        zoom:
+                cookieZoom !== undefined ? parseFloat(cookieZoom) :
+                5,
+        center:
+                (cookieCenterLat !== undefined && cookieCenterLon !== undefined) ? new google.maps.LatLng(parseFloat(cookieCenterLat), parseFloat(cookieCenterLon)) :
+                new google.maps.LatLng(-3.162, 113.730),
         mapTypeId: google.maps.MapTypeId.TERRAIN
     });
-}
+    map.addListener('zoom_changed', function () {
+        ace.cookie.set('history-zoom', map.getZoom(), 604800)
+    });
+    map.addListener('center_changed', function () {
+        ace.cookie.set('history-center-lat', map.getCenter().lat(), 604800)
+        ace.cookie.set('history-center-lon', map.getCenter().lng(), 604800)
+    });
 
-function getTitle(point) {
-    return 'IAQ : '+point.iaq;
+    updatePoints();
 }
 
 function getCircle(point) {
     var iaq = parseInt(point.iaq);
-    var colortemp = getColor('iaq', iaq);
+    var colortemp = getColor($('#sensorparam').val(), point);
     var circle = {
         path: google.maps.SymbolPath.CIRCLE,
         fillColor: colortemp,
@@ -25,9 +39,6 @@ function getCircle(point) {
     };
     return circle;
 }
-
-// array of reference of all markers    
-var markers = [];
 
 // Sets the map on all markers in the array.
 function setMapOnAll(m) {
@@ -45,16 +56,17 @@ function clearMarkers() {
     setMapOnAll(null);
 }
 
-// Deletes all markers in the array by removing references to them.   
+// Deletes all markers in the array by removing references to them.
 function deleteMarkers() {
     clearMarkers();
     markers = [];
+    if (markerCluster !== undefined)
+        markerCluster.clearMarkers();
 }
 
 // Render pie
 function renderPie() {
     $('.easy-pie-chart.percentage').each(function () {
-        console.log('renderpie');
         $(this).easyPieChart({
             barColor: $(this).data('color'),
             trackColor: '#EEEEEE',
@@ -66,73 +78,127 @@ function renderPie() {
         }).css('color', $(this).data('color'));
     });
 }
+
 function rgbToHex(r, g, b) {
     return "#" + ((1 << 24) + (r << 16) + (g << 8) + b).toString(16).slice(1);
 }
-function getColor(param, val) {
-    var r, g, b;
-    if (param === 'iaq') {
-        //0     -> 122,229,45
-        //51    -> 248,252,12
-        //101   -> 242,189,46
-        //151   -> 211,33,33
-        //>201   -> 121,5,175
-        if (val < 51) {
-            r = 122 + (val / 50) * (248 - 122);
-            g = 229 + (val / 50) * (252 - 229);
-            b = 45 + (val / 50) * (12 - 45);
-        } else if (val < 101) {
-            val = val - 50;
-            r = 248 + (val / 50) * (242 - 248);
-            g = 252 + (val / 50) * (189 - 252);
-            b = 12 + (val / 50) * (46 - 12);
-        } else if (val < 151) {
-            val = val - 100;
-            r = 242 + (val / 50) * (211 - 242);
-            g = 189 + (val / 50) * (33 - 189);
-            b = 46 + (val / 50) * (33 - 46);
-        } else if (val < 201) {
-            val = val - 150;
-            r = 211 + (val / 50) * (121 - 211);
-            g = 33 + (val / 50) * (5 - 33);
-            b = 33 + (val / 50) * (175 - 33);
-        } else {
-            r = 121;
-            g = 5;
-            b = 175;
+function hexToRgb(hex) {
+    var result = /^#?([a-f\d]{2})([a-f\d]{2})([a-f\d]{2})$/i.exec(hex);
+    return result ? {
+        r: parseInt(result[1], 16),
+        g: parseInt(result[2], 16),
+        b: parseInt(result[3], 16)
+    } : null;
+}
+
+function getColor(param, point) {
+    var r, g, b,
+            val = getParamValue(param, point),
+            th = thresholds[param],
+            cls = colors[param];
+    for (var i = 0; i < th.length; i++) {
+        if (val <= th[i]) {
+            //we found it
+            //the color lies between cls[i-1](if any) and cls[i]
+            if (i === 0) {
+                return cls[0];
+            } else {
+                var bot = hexToRgb(cls[i - 1]);
+                var top = hexToRgb(cls[i]);
+                var gap = th[i] - th[i - 1];
+                val = val - th[i - 1];
+                //somewhere between
+                r = bot.r + (val / gap) * (top.r - bot.r);
+                g = bot.g + (val / gap) * (top.g - bot.g);
+                b = bot.b + (val / gap) * (top.b - bot.b);
+                return rgbToHex(Math.round(r), Math.round(g), Math.round(b));
+            }
         }
     }
-    return rgbToHex(Math.round(r), Math.round(g), Math.round(b));
+    return cls[cls.length - 1];
 }
 
-function getRemark(param, val) {
-    if (param === 'iaq') {
-        if (val < 51)
-            return 'Good';
-        if (val < 101)
-            return 'Moderate';
-        if (val < 151)
-            return 'Unhealthy for sensitive group';
-        if (val < 201)
-            return 'Unhealthy';
-        return 'Very unhealthy';
+function getRemark(paramnum, pointdata) {
+    var val = getParamValue(paramnum, pointdata);
+    return 'Remark';
+}
 
+var params = [
+    'iaq',
+    'tvoc',
+    'co2',
+    'pm25',
+    'pm10',
+    'temperature',
+    'humidity'
+], displayname = [
+    'IAQ (index)',
+    'TVOC (index)',
+    'CO<sub>2</sub> (PPM)',
+    'PM2.5 (μg/m<sup>3</sup>)',
+    'PM10  (μg/m<sup>3</sup>)',
+    'Temp (℃)',
+    'Humidity (%)'
+],
+        thresholds = [
+            [0, 50, 100, 150, 200], //iaq
+            [0, 200, 500, 1000, 1500], //tvoc
+            [0, 800, 1100, 2500], //co2
+            [0, 20, 40, 60, 150], //pm2.5
+            [0, 60, 150, 250], //pm10
+            [-20, -10, 15, 20, 28, 30, 35], //temperature
+            [0, 20, 30, 40, 60, 80, 90]      //humidity
+        ], colors = [
+    ['#7ae52d', '#f8fc0c', '#f2bd2e', '#d32121', '#7905af'], //iaq
+    ['#7ae52d', '#f8fc0c', '#f2bd2e', '#d32121', '#7905af'], //tvoc
+    ['#7ae52d', '#f8fc0c', '#f2bd2e', '#d32121'], //co2
+    ['#7ae52d', '#f8fc0c', '#f2bd2e', '#d32121', '#7905af'], //pm2.5
+    ['#7ae52d', '#f8fc0c', '#f2bd2e', '#d32121'], //pm10
+    ['#d32121', '#f2bd2e', '#f8fc0c', '#7ae52d', '#f8fc0c', '#f2bd2e', '#d32121'], //temp
+    ['#d32121', '#f2bd2e', '#f8fc0c', '#7ae52d', '#f8fc0c', '#f2bd2e', '#d32121']//hum
+];
+
+
+function getTitle(paramnum) {
+    return displayname[paramnum]
+}
+
+function getParamValue(paramnum, point) {
+    return point[params[paramnum]]
+}
+
+function capitalizeFirstLetter(string) {
+    return string.charAt(0).toUpperCase() + string.slice(1);
+}
+
+/**
+ * Create infoBox depends on selected parameter
+ * @param {type} point
+ * @returns {unresolved}
+ */
+function createInfoboxMain(point) {
+    var paramnum = $('#sensorparam').val(),
+            $ele = $(document.getElementById('infobox-main').cloneNode(true));
+    // header
+    $ele.find('#main-title').html(getTitle(paramnum));
+    $ele.find('#main-value').html(getParamValue(paramnum, point));
+    $ele.find('#main-pie').data('color', getColor(paramnum, point));
+    // TODO   $ele.find('#main-remark').html(getRemark(paramnum, point));
+    // another param
+    var infobox = $ele.find('.infobox').detach();
+    for (var i = 0; i < params.length; i++) {
+        if (i != paramnum) {
+            //add to infobox-container
+            var clone = infobox.clone();
+            clone.find('.infobox-content').html(getTitle(i));
+            clone.find('.infobox-data-number').html(getParamValue(i, point));
+            //insert
+            $ele.find('.infobox-container').append(clone);
+        }
     }
-}
-
-function createInfobox(point) {
-    var $ele = $(document.getElementById('infobox-main').cloneNode(true));
-    $ele.find('#iaq-remark').html(getRemark('iaq', point.iaq));
-    $ele.find('#iaq-value').html(point.iaq);
-    $ele.find('#co2-value').html(point.co2);
-    $ele.find('#pm25-value').html(point.pm25);
-    $ele.find('#pm10-value').html(point.pm10);
-    $ele.find('#tvoc-value').html(point.tvoc);
-    $ele.find('#hum-value').html(point.humidity);
-    $ele.find('#temp-value').html((point.temperature - 4000) / 100);
-    $ele.find('#iaq-pie').data('color', getColor('iaq', point.iaq));
     return $ele.get(0);
 }
+
 function addMarker(point) {
     //create marker
     var marker = new google.maps.Marker({
@@ -141,17 +207,21 @@ function addMarker(point) {
         icon: getCircle(point),
         title: getTitle(point)
     });
+
     //create infobox
     var ib = new InfoBox({
-        content: createInfobox(point),
+        content: createInfoboxMain(point),
         alignBottom: true, //infobox di utaranya marker
         pixelOffset: new google.maps.Size(-200, 0),
         maxWidth: 600
     });
+
     google.maps.event.addListener(ib, 'domready', function () {
         renderPie()
     })
+
     marker.infobox = ib;
+
     //add event handler
     google.maps.event.addListener(marker, 'click', function () {
         this.infobox.open(map, this);
@@ -166,62 +236,135 @@ function addMarker(point) {
                 marker.infobox.close();
             }
         });
+        map.panTo(marker.getPosition());
     });
     //done all, add marker to array
     markers.push(marker);
 }
 google.maps.event.addDomListener(window, 'load', initialize);
-jQuery(function ($) {
 
+function updateCookies() {
+    ace.cookie.set('history-param', $('#sensorparam').val(), 604800);
+    ace.cookie.set('history-device', $('#device').val(), 604800);
+    ace.cookie.set('history-time-from', $('#date-timepicker-from').data('DateTimePicker').date(), 604800);
+    ace.cookie.set('history-time-to', $('#date-timepicker-to').data('DateTimePicker').date(), 604800);
+}
+
+function updatePoints() {
+    //flush previous markers
+    deleteMarkers();
+    var device = $('#device').val();
+    console.log('device? ' + device)
+    var sel = $('#sensorparam').val();
+    console.log('param? ' + sel)
+    var from = $('#date-timepicker-from').data('DateTimePicker')
+            .date();
+    var to = $('#date-timepicker-to').data('DateTimePicker').date();
+    if (from != null && to != null) {
+        var url = base_url + 'index.php/device/get_points/' +
+                device + '/' + from + '/' + to;
+        $.getJSON(url, function (points) {
+            $.each(points, function (i, rec) {
+                addMarker(rec);
+            });
+            markerCluster = new MarkerClusterer(map, markers);
+        });
+    }
+}
+/**
+ * Apply background style to .legend and add invisible li's to it.
+ * @returns {undefined}
+ */
+function updateLegend() {
+    var selectedParam = $('#sensorparam').val(),
+            th = thresholds[selectedParam],
+            color = colors[selectedParam],
+            bg = '',
+            thRange = th[th.length - 1] - th[0]
+            ;
+    var $ul = $('.legend');
+    //clear ul
+    $ul.empty();
+    for (var i = 0; i < th.length; i++) {
+        //compute percentage
+        if (i === 0) {
+            bg = color[i] + ' 0%';
+        } else {
+            var percent = (th[i] - th[0]) * 100 / thRange;
+            bg = bg + ', ' + color[i] + ' ' + percent + '%';
+        }
+        //create li inside .legend
+        //the number of li's created is equal to th.length-1
+        if (i < th.length - 1) {
+            var $li = $('<li></li>');//create new li
+            //give class based on parity
+            if (i % 2 === 0) {
+                //even index means odd'th element in the list
+                $li.addClass('odd');
+            }
+            //insert label
+            $li.append('<span class="start">' + th[i] + '</span>');
+            //give class on first/last li
+            if (i === 0) {
+                //lowest level
+                $li.addClass('lowest');
+            } else if (i === th.length - 2) {
+                //highest level
+                $li.addClass('highest');
+                //add an .end
+                $li.append('<span class="end">' + th[i + 1] + '</span>');
+            }
+            //compute the length of the li compared to the ul
+            var percentLength = 100 * (th[i + 1] - th[i]) / thRange;
+            //put the style
+            $li.width(percentLength + '%');
+            //add to ul
+            $ul.append($li);
+        }
+    }
+    //apply background linear gradient css
+    $ul.css('background', 'linear-gradient(to right,' + bg + ')');
+}
+
+jQuery(function ($) {
+    var cookieFrom = ace.cookie.get('history-time-from'),
+            cookieTo = ace.cookie.get('history-time-to'),
+            cookieParam = ace.cookie.get('history-param'),
+            cookieDevice = ace.cookie.get('history-device');
     $('#date-timepicker-from').datetimepicker({
-        defaultDate: Date.now() - 7000 * 24 * 3600
+        defaultDate: cookieFrom !== undefined ? cookieFrom : Date.now() - 30 * 24 * 3600 * 1000
     }).next().on(ace.click_event, function () {
         $(this).prev().focus();
     });
     $('#date-timepicker-to').datetimepicker({
-        defaultDate: Date.now()
+        defaultDate: cookieTo !== undefined ? cookieTo : Date.now()
     }).next().on(ace.click_event, function () {
         $(this).prev().focus();
     });
-    $('#params').change(function () {
+    if (cookieParam !== undefined) {
+        $('#sensorparam').val(cookieParam);
+    }
+    updateLegend();
+    $('#sensorparam').change(function () {
         updateCookies();
         updatePoints();
+        updateLegend();
     });
+    if (cookieDevice !== undefined) {
+        $('#device').val(cookieDevice);
+    }
     $('#device').change(function () {
         updateCookies();
         updatePoints();
     });
     $('#date-timepicker-from').on("dp.change", function (e) {
-        $('#date-timepicker-to').data("DateTimePicker").minDate(
-                e.date);
+        $('#date-timepicker-to').data("DateTimePicker").minDate(e.date);
         updateCookies();
         updatePoints();
     });
     $("#date-timepicker-to").on("dp.change", function (e) {
-        $('#date-timepicker-from').data("DateTimePicker").maxDate(
-                e.date);
+        $('#date-timepicker-from').data("DateTimePicker").maxDate(e.date);
         updateCookies();
         updatePoints();
     });
-
-    function updateCookies() {}
-
-    function updatePoints() {
-        //flush previous markers
-        deleteMarkers();
-        var device = $('#device').val();
-        var from = $('#date-timepicker-from').data('DateTimePicker')
-                .date();
-        var to = $('#date-timepicker-to').data('DateTimePicker').date();
-        if (from != null && to != null) {
-            var url = base_url + 'index.php/device/get_points/' +
-                    device + '/' + from + '/' + to;
-            $.getJSON(url, function (points) {
-                $.each(points, function (i, rec) {
-                    addMarker(rec);
-                });
-                var markerCluster = new MarkerClusterer(map, markers);
-            });
-        }
-    }
 });
