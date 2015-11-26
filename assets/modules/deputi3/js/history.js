@@ -8,10 +8,10 @@ function initialize() {
             , cookieCenterLon = ace.cookie.get('history-center-lon');
     map = new google.maps.Map(document.getElementById('map'), {
         zoom:
-                cookieZoom !== undefined ? parseFloat(cookieZoom) :
+                cookieZoom != undefined ? parseFloat(cookieZoom) :
                 5,
         center:
-                (cookieCenterLat !== undefined && cookieCenterLon !== undefined) ? new google.maps.LatLng(parseFloat(cookieCenterLat), parseFloat(cookieCenterLon)) :
+                (cookieCenterLat != undefined && cookieCenterLon != undefined) ? new google.maps.LatLng(parseFloat(cookieCenterLat), parseFloat(cookieCenterLon)) :
                 new google.maps.LatLng(-3.162, 113.730),
         mapTypeId: google.maps.MapTypeId.TERRAIN
     });
@@ -60,115 +60,13 @@ function clearMarkers() {
 function deleteMarkers() {
     clearMarkers();
     markers = [];
-    if (markerCluster !== undefined)
+    if (markerCluster != undefined)
         markerCluster.clearMarkers();
-}
-
-// Render pie
-function renderPie() {
-    $('.easy-pie-chart.percentage').each(function () {
-        $(this).easyPieChart({
-            barColor: $(this).data('color'),
-            trackColor: '#EEEEEE',
-            scaleColor: false,
-            lineCap: 'butt',
-            lineWidth: 12,
-            animate: false,
-            size: 100
-        }).css('color', $(this).data('color'));
-    });
-}
-
-function rgbToHex(r, g, b) {
-    return "#" + ((1 << 24) + (r << 16) + (g << 8) + b).toString(16).slice(1);
-}
-function hexToRgb(hex) {
-    var result = /^#?([a-f\d]{2})([a-f\d]{2})([a-f\d]{2})$/i.exec(hex);
-    return result ? {
-        r: parseInt(result[1], 16),
-        g: parseInt(result[2], 16),
-        b: parseInt(result[3], 16)
-    } : null;
-}
-
-function getColor(param, point) {
-    var r, g, b,
-            val = getParamValue(param, point),
-            th = thresholds[param],
-            cls = colors[param];
-    for (var i = 0; i < th.length; i++) {
-        if (val <= th[i]) {
-            //we found it
-            //the color lies between cls[i-1](if any) and cls[i]
-            if (i === 0) {
-                return cls[0];
-            } else {
-                var bot = hexToRgb(cls[i - 1]);
-                var top = hexToRgb(cls[i]);
-                var gap = th[i] - th[i - 1];
-                val = val - th[i - 1];
-                //somewhere between
-                r = bot.r + (val / gap) * (top.r - bot.r);
-                g = bot.g + (val / gap) * (top.g - bot.g);
-                b = bot.b + (val / gap) * (top.b - bot.b);
-                return rgbToHex(Math.round(r), Math.round(g), Math.round(b));
-            }
-        }
-    }
-    return cls[cls.length - 1];
 }
 
 function getRemark(paramnum, pointdata) {
     var val = getParamValue(paramnum, pointdata);
     return 'Remark';
-}
-
-var params = [
-    'iaq',
-    'tvoc',
-    'co2',
-    'pm25',
-    'pm10',
-    'temperature',
-    'humidity'
-], displayname = [
-    'IAQ (index)',
-    'TVOC (PPB)',
-    'CO<sub>2</sub> (PPM)',
-    'PM2.5 (μg/m<sup>3</sup>)',
-    'PM10  (μg/m<sup>3</sup>)',
-    'Temp (℃)',
-    'Humidity (%)'
-],
-        thresholds = [
-            [0, 50, 100, 150, 200], //iaq
-            [0, 200, 500, 1000, 1500], //tvoc
-            [0, 800, 1100, 2500], //co2
-            [0, 20, 40, 60, 150], //pm2.5
-            [0, 60, 150, 250], //pm10
-            [-20, -10, 15, 20, 28, 30, 35], //temperature
-            [0, 20, 30, 40, 60, 80, 90]      //humidity
-        ], colors = [
-    ['#7ae52d', '#f8fc0c', '#f2bd2e', '#d32121', '#7905af'], //iaq
-    ['#7ae52d', '#f8fc0c', '#f2bd2e', '#d32121', '#7905af'], //tvoc
-    ['#7ae52d', '#f8fc0c', '#f2bd2e', '#d32121'], //co2
-    ['#7ae52d', '#f8fc0c', '#f2bd2e', '#d32121', '#7905af'], //pm2.5
-    ['#7ae52d', '#f8fc0c', '#f2bd2e', '#d32121'], //pm10
-    ['#d32121', '#f2bd2e', '#f8fc0c', '#7ae52d', '#f8fc0c', '#f2bd2e', '#d32121'], //temp
-    ['#d32121', '#f2bd2e', '#f8fc0c', '#7ae52d', '#f8fc0c', '#f2bd2e', '#d32121']//hum
-];
-
-
-function getTitle(paramnum) {
-    return displayname[paramnum]
-}
-
-function getParamValue(paramnum, point) {
-    return point[params[paramnum]]
-}
-
-function capitalizeFirstLetter(string) {
-    return string.charAt(0).toUpperCase() + string.slice(1);
 }
 
 /**
@@ -183,7 +81,7 @@ function createInfoboxMain(point) {
     $ele.find('#main-title').html(getTitle(paramnum));
     $ele.find('#main-value').html(getParamValue(paramnum, point));
     $ele.find('#main-pie').data('color', getColor(paramnum, point));
-    // TODO   $ele.find('#main-remark').html(getRemark(paramnum, point));
+    $ele.find('#main-remark').html(moment(point.recorded_timestamp).format('D MMM YYYY, hh:mm:ss'));
     // another param
     var infobox = $ele.find('.infobox').detach();
     for (var i = 0; i < params.length; i++) {
@@ -254,9 +152,6 @@ function updatePoints() {
     //flush previous markers
     deleteMarkers();
     var device = $('#device').val();
-    console.log('device? ' + device)
-    var sel = $('#sensorparam').val();
-    console.log('param? ' + sel)
     var from = $('#date-timepicker-from').data('DateTimePicker')
             .date();
     var to = $('#date-timepicker-to').data('DateTimePicker').date();
@@ -332,16 +227,16 @@ jQuery(function ($) {
             cookieParam = ace.cookie.get('history-param'),
             cookieDevice = ace.cookie.get('history-device');
     $('#date-timepicker-from').datetimepicker({
-        defaultDate: cookieFrom !== undefined ? cookieFrom : Date.now() - 30 * 24 * 3600 * 1000
+        defaultDate: cookieFrom != undefined ? cookieFrom : Date.now() - 30 * 24 * 3600 * 1000
     }).next().on(ace.click_event, function () {
         $(this).prev().focus();
     });
     $('#date-timepicker-to').datetimepicker({
-        defaultDate: cookieTo !== undefined ? cookieTo : Date.now()
+        defaultDate: cookieTo != undefined ? cookieTo : Date.now()
     }).next().on(ace.click_event, function () {
         $(this).prev().focus();
     });
-    if (cookieParam !== undefined) {
+    if (cookieParam != undefined) {
         $('#sensorparam').val(cookieParam);
     }
     updateLegend();
@@ -350,7 +245,7 @@ jQuery(function ($) {
         updatePoints();
         updateLegend();
     });
-    if (cookieDevice !== undefined) {
+    if (cookieDevice != undefined) {
         $('#device').val(cookieDevice);
     }
     $('#device').change(function () {

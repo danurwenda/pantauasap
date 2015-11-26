@@ -28,6 +28,23 @@ class Record_model extends CI_Model {
                         ->get('record')
                         ->result();
     }
+    
+    /**
+     * 
+     * @param type $sensor_id Kalau 0 berarti semua
+     */
+    public function getLastRecords($sensor_id){
+        if ($sensor_id != 0) {
+            $this->db->where('sensor_id', $sensor_id);
+        }
+        return $this->db->select('location[0] as lat, location[1] as lon, iaq, pm10, tvoc, co2, pm25, temperature, humidity, recorded_timestamp, sensor_id', false)
+                        ->where('location[0] <>',-1,false)
+                        ->where('location[1] <>',-1,false)
+                        ->order_by("recorded_timestamp","desc")
+                        ->limit(1)
+                        ->get('record')
+                        ->result();
+    }
 
     public function exist($sensor, $rectime) {
         return $this->db->get_where('record', array('sensor_id' => $sensor, 'recorded_timestamp' => $rectime))->num_rows() > 0;

@@ -9,11 +9,18 @@ class Device extends CI_Controller {
         $this->load->model('device_model');
         $this->load->model('record_model');
     }
+    
+    public function get_last_point($device=0){
+        $records = $this->record_model->getLastRecords($device);
+        foreach($records as $r){
+            $r->temperature = ($r->temperature-4000)/100;
+        }
+        echo json_encode($records);
+    }
 
     public function get_points($device, $from, $to) {
         $from = $from / 1000;
         $to = $to / 1000;
-//        $records = $this->record_model->getRecords($device, 1447214580, 1447261380);
         $records = $this->record_model->getRecords($device, $from, $to);
         foreach($records as $r){
             $r->temperature = ($r->temperature-4000)/100;

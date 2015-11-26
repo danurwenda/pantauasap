@@ -4,6 +4,6 @@
 */cache/*
 */cache/!index.html
 */cache/!.htaccess
-/nbproject/private/
+nbproject/private/
 /application/config/config.php
 /application/config/database.php

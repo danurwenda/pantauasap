@@ -68,7 +68,10 @@ echo js_asset('jsclusterer/src/markerclusterer_compiled.js', 'deputi3');
     src="https://maps.googleapis.com/maps/api/js?libraries=visualization">
 </script>
 <script type="text/javascript" src="http://google-maps-utility-library-v3.googlecode.com/svn/trunk/infobox/src/infobox.js"></script>
-<?php echo js_asset('history.js', 'deputi3'); ?>
+<?php
+echo js_asset('mapsettings.js', 'deputi3');
+echo js_asset('history.js', 'deputi3');
+?>
 <!-- #section:settings.box -->
 <div class="ace-settings-container" id="ace-settings-container">
     <div class="btn btn-app btn-xs btn-warning ace-settings-btn open" id="ace-settings-btn">
