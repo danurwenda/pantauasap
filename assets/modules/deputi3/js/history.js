@@ -17,6 +17,7 @@ function initialize() {
     });
     map.addListener('zoom_changed', function () {
         ace.cookie.set('history-zoom', map.getZoom(), 604800)
+        console.log(map.getZoom())
     });
     map.addListener('center_changed', function () {
         ace.cookie.set('history-center-lat', map.getCenter().lat(), 604800)
@@ -162,7 +163,7 @@ function updatePoints() {
             $.each(points, function (i, rec) {
                 addMarker(rec);
             });
-            markerCluster = new MarkerClusterer(map, markers);
+            markerCluster = new MarkerClusterer(map, markers,{maxZoom:18});
         });
     }
 }
