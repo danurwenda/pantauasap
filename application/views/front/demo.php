@@ -57,7 +57,7 @@
 
         // Get the data. The contents of the data file can be viewed at
         // https://github.com/highslide-software/highcharts.com/blob/master/samples/data/activity.json
-        $.getJSON('http://118.97.100.60/asap/index.php/device/get_json/<?php echo $sensor_id; ?>', function (activity) {
+        $.getJSON(base_url+'index.php/device/get_json/<?php echo $sensor_id; ?>', function (activity) {
             $.each(activity.datasets, function (i, dataset) {
 
                 // Add X values

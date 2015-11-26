@@ -45,7 +45,17 @@
                     <span class="percent infobox-data-number" id="main-value"></span>
                 </div>
             </div>
-            <div class="col-xs-4" id="main-remark"></div>
+            <div class="col-xs-4">
+                <div class="row" id="main-remark"></div>
+                <div class="row bottom" id="device-source">
+                    <a href="#">
+                    <button class="btn btn-xs btn-info btn-round">
+                        <i class="ace-icon fa fa-signal bigger-110"></i>
+                        Device #<span id="device-id"></span>
+                    </button>
+                    </a>
+                </div>
+            </div>
         </div>
         <div class="infobox-container" id="infobox2">
             <!-- #section:pages/dashboard.infobox -->
@@ -167,11 +177,14 @@ echo js_asset('mapsettings.js', 'deputi3');
 
         function createInfoboxMain(point) {
             var paramnum = 0,
-                    $ele = $(document.getElementById('infobox-main').cloneNode(true));
+                    $ele = $(document.getElementById('infobox-main').cloneNode(true)),
+                    chartUrl=base_url+'index.php/chart/' + point.sensor_id;
             // header
             $ele.find('#main-title').html(getTitle(paramnum));
             $ele.find('#main-value').html(getParamValue(paramnum, point));
             $ele.find('#main-pie').data('color', getColor(paramnum, point));
+            $ele.find('#device-source a').attr('href',chartUrl).attr('target','_blank')
+            .find('#device-id').html(point.sensor_id);
             $ele.find('#main-remark').html(moment(point.recorded_timestamp).format('D MMM YYYY, hh:mm:ss'));
             // another param
             var infobox = $ele.find('.infobox').detach();

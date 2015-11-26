@@ -51,7 +51,17 @@ echo js_asset('jsclusterer/src/markerclusterer_compiled.js', 'deputi3');
                     <span class="percent infobox-data-number" id="main-value"></span>
                 </div>
             </div>
-            <div class="col-xs-4" id="main-remark"></div>
+            <div class="col-xs-4">
+                <div class="row" id="main-remark"></div>
+                <div class="row bottom" id="device-source">
+                    <a href="#">
+                    <button class="btn btn-xs btn-info btn-round">
+                        <i class="ace-icon fa fa-signal bigger-110"></i>
+                        Device #<span id="device-id"></span>
+                    </button>
+                    </a>
+                </div>
+            </div>
         </div>
         <div class="infobox-container" id="infobox2">
             <!-- #section:pages/dashboard.infobox -->

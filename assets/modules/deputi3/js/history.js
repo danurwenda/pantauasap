@@ -77,11 +77,14 @@ function getRemark(paramnum, pointdata) {
  */
 function createInfoboxMain(point) {
     var paramnum = $('#sensorparam').val(),
-            $ele = $(document.getElementById('infobox-main').cloneNode(true));
+            $ele = $(document.getElementById('infobox-main').cloneNode(true)),
+            chartUrl=base_url+'index.php/chart/' + point.sensor_id;
     // header
     $ele.find('#main-title').html(getTitle(paramnum));
     $ele.find('#main-value').html(getParamValue(paramnum, point));
     $ele.find('#main-pie').data('color', getColor(paramnum, point));
+    $ele.find('#device-source a').attr('href',chartUrl).attr('target','_blank')
+            .find('#device-id').html(point.sensor_id);
     $ele.find('#main-remark').html(moment(point.recorded_timestamp).format('D MMM YYYY, hh:mm:ss'));
     // another param
     var infobox = $ele.find('.infobox').detach();
