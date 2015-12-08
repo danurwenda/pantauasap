@@ -16,12 +16,12 @@ function initialize() {
         mapTypeId: google.maps.MapTypeId.TERRAIN
     });
     map.addListener('zoom_changed', function () {
-        ace.cookie.set('history-zoom', map.getZoom(), 604800)
+        ace.cookie.set('history-zoom', map.getZoom(), 3600)
         console.log(map.getZoom())
     });
     map.addListener('center_changed', function () {
-        ace.cookie.set('history-center-lat', map.getCenter().lat(), 604800)
-        ace.cookie.set('history-center-lon', map.getCenter().lng(), 604800)
+        ace.cookie.set('history-center-lat', map.getCenter().lat(), 3600)
+        ace.cookie.set('history-center-lon', map.getCenter().lng(), 3600)
     });
 
     updatePoints();
@@ -146,10 +146,10 @@ function addMarker(point) {
 google.maps.event.addDomListener(window, 'load', initialize);
 
 function updateCookies() {
-    ace.cookie.set('history-param', $('#sensorparam').val(), 604800);
-    ace.cookie.set('history-device', $('#device').val(), 604800);
-    ace.cookie.set('history-time-from', $('#date-timepicker-from').data('DateTimePicker').date(), 604800);
-    ace.cookie.set('history-time-to', $('#date-timepicker-to').data('DateTimePicker').date(), 604800);
+    ace.cookie.set('history-param', $('#sensorparam').val(), 3600);
+    ace.cookie.set('history-device', $('#device').val(), 3600);
+    ace.cookie.set('history-time-from', $('#date-timepicker-from').data('DateTimePicker').date(), 3600);
+    ace.cookie.set('history-time-to', $('#date-timepicker-to').data('DateTimePicker').date(), 3600);
 }
 
 function updatePoints() {

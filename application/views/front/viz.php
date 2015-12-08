@@ -101,11 +101,11 @@ echo js_asset('mapsettings.js', 'deputi3');
             });
 
             map.addListener('zoom_changed', function () {
-                ace.cookie.set('latest-zoom', map.getZoom(), 604800)
+                ace.cookie.set('latest-zoom', map.getZoom(), 3600)
             });
             map.addListener('center_changed', function () {
-                ace.cookie.set('latest-center-lat', map.getCenter().lat(), 604800)
-                ace.cookie.set('latest-center-lon', map.getCenter().lng(), 604800)
+                ace.cookie.set('latest-center-lat', map.getCenter().lat(), 3600)
+                ace.cookie.set('latest-center-lon', map.getCenter().lng(), 3600)
             });
 
             loadLastPoints();
