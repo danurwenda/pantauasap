@@ -38,8 +38,14 @@ class Airdata extends CI_Controller {
     ) {
         //$recorded_time ini formatnya 1999-01-08-04-05-06, harus diconvert jadi
         //1999-01-08 04:05:06
+        //kalau yang format baru, YYYY-MM-DD-HH-MM-SS-angka
         $recorded_time = explode("-", $recorded_time);
-        $timezone = isset($recorded_time[6]) ? $recorded_time[6] - 12 : '';
+        $timezone = isset($recorded_time[6]) ? $recorded_time[6] - 12 : 7;
+        if ($timezone > 0) {
+            $timezone = '+' . $timezone;
+        } else if ($timezone == 0) {
+            $timezone = '';
+        }
 
         $recorded_time = $recorded_time[0] . "-" . $recorded_time[1] . "-" . $recorded_time[2]
                 . " " .
