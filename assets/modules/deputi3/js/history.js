@@ -85,7 +85,7 @@ function createInfoboxMain(point) {
     $ele.find('#main-pie').data('color', getColor(paramnum, point));
     $ele.find('#device-source a').attr('href',chartUrl).attr('target','_blank')
             .find('#device-id').html(point.sensor_id);
-    $ele.find('#main-remark').html(moment(point.recorded_timestamp).format('D MMM YYYY, hh:mm:ss'));
+    $ele.find('#main-remark').html(moment(point.recorded_timestamp).format('D MMM YYYY, HH:mm:ss'));
     // another param
     var infobox = $ele.find('.infobox').detach();
     for (var i = 0; i < params.length; i++) {
