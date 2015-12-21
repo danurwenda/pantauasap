@@ -10,15 +10,31 @@
             <file>file:/C:/xampp/htdocs/asap/application/controllers/Device.php</file>
             <file>file:/C:/xampp/htdocs/asap/application/models/Device_model.php</file>
         </group>
-        <group name="asap">
-            <file>file:/C:/xampp/htdocs/pantauasap/application/models/Device_model.php</file>
-            <file>file:/C:/xampp/htdocs/pantauasap/application/views/front/template.php</file>
+        <group name="belajar laravel">
             <file>file:/C:/xampp/htdocs/pantauasap/application/models/Record_model.php</file>
+            <file>file:/C:/xampp/htdocs/pantauasap/application/views/front/viz.php</file>
+            <file>file:/C:/xampp/htdocs/pantauasap/application/controllers/Home.php</file>
+            <file>file:/C:/xampp/htdocs/pantauasap/application/models/Data_model.php</file>
+            <file>file:/C:/xampp/htdocs/pantauasap/application/controllers/Vizu.php</file>
+            <file>file:/C:/xampp/htdocs/pantauasap/assets/modules/deputi3/js/mapsettings.js</file>
             <file>file:/C:/xampp/htdocs/pantauasap/application/controllers/Device.php</file>
+            <file>file:/C:/xampp/htdocs/pantauasap/application/controllers/Airdata.php</file>
+            <file>file:/C:/xampp/htdocs/pantauasap/assets/modules/deputi3/js/history.js</file>
             <file>file:/C:/xampp/htdocs/pantauasap/.gitignore</file>
+            <file>file:/C:/xampp/htdocs/pantauasap/application/views/front/demo.php</file>
+            <file>file:/C:/xampp/htdocs/pantauasap/application/views/front/history.php</file>
+        </group>
+        <group name="asap">
+            <file>file:/C:/xampp/htdocs/pantauasap/application/models/Record_model.php</file>
+            <file>file:/C:/xampp/htdocs/pantauasap/assets/modules/deputi3/js/history.js</file>
+            <file>file:/C:/xampp/htdocs/pantauasap/application/controllers/Airdata.php</file>
             <file>file:/C:/xampp/htdocs/pantauasap/application/views/front/history.php</file>
             <file>file:/C:/xampp/htdocs/pantauasap/application/config/database.php</file>
+            <file>file:/C:/xampp/htdocs/pantauasap/application/views/front/chart.php</file>
+            <file>file:/C:/xampp/htdocs/pantauasap/assets/modules/deputi3/js/hcs.js</file>
             <file>file:/C:/xampp/htdocs/pantauasap/application/config/config.php</file>
+            <file>file:/C:/xampp/htdocs/pantauasap/application/config/routes.php</file>
+            <file>file:/C:/xampp/htdocs/pantauasap/application/views/front/recent.php</file>
             <file>file:/C:/xampp/htdocs/pantauasap/application/controllers/Home.php</file>
         </group>
     </open-files>

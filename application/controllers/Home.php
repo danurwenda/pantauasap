@@ -12,7 +12,7 @@ class Home extends CI_Controller {
     }
 
     public function index() {
-        $this->template->display('viz', array('page' => 1));
+        $this->template->display('recent', array('page' => 1));
     }
 
     public function about() {
@@ -20,7 +20,7 @@ class Home extends CI_Controller {
     }
 
     public function sensor_chart($sensor_id) {
-        $this->template->display('demo', array('sensor_id' => $sensor_id, 'page' => 1));
+        $this->template->display('chart', array('sensor_id' => $sensor_id, 'page' => 1));
     }
 
     public function history($id = 1) {

@@ -1,6 +1,6 @@
 
 <script src="https://code.jquery.com/jquery-1.11.3.min.js"></script>
-<script src="https://code.highcharts.com/highcharts.js"></script>
+<?php echo js_asset('hcs.js','deputi3');?>
 <script type="text/javascript">
     /*
      The purpose of this demo is to demonstrate how multiple charts on the same page can be linked
