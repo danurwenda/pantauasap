@@ -183,7 +183,7 @@ echo js_asset('mapsettings.js', 'deputi3');
             $ele.find('#main-title').html(getTitle(paramnum));
             $ele.find('#main-value').html(getParamValue(paramnum, point));
             $ele.find('#main-pie').data('color', getColor(paramnum, point));
-            $ele.find('#device-source a').attr('href',chartUrl).attr('target','_blank')
+            $ele.find('#device-source a').attr('href',chartUrl).attr('target','_blank').attr('title','See recent records')
             .find('#device-id').html(point.sensor_id);
             $ele.find('#main-remark').html(moment(point.recorded_timestamp).format('D MMM YYYY, HH:mm:ss'));
             // another param
