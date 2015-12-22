@@ -78,7 +78,7 @@ function getRemark(paramnum, pointdata) {
 function createInfoboxMain(point) {
     var paramnum = $('#sensorparam').val(),
             $ele = $(document.getElementById('infobox-main').cloneNode(true)),
-            chartUrl=base_url+'index.php/chart/' + point.sensor_id;
+            chartUrl=base_url+'chart/' + point.sensor_id;
     // header
     $ele.find('#main-title').html(getTitle(paramnum));
     $ele.find('#main-value').html(getParamValue(paramnum, point));
@@ -160,7 +160,7 @@ function updatePoints() {
             .date();
     var to = $('#date-timepicker-to').data('DateTimePicker').date();
     if (from != null && to != null) {
-        var url = base_url + 'index.php/device/get_points/' +
+        var url = base_url + 'device/get_points/' +
                 device + '/' + from + '/' + to;
         $.getJSON(url, function (points) {
             $.each(points, function (i, rec) {

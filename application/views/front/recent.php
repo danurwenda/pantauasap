@@ -112,7 +112,7 @@ echo js_asset('mapsettings.js', 'deputi3');
         }
 
         function loadLastPoints() {
-            var url = base_url + 'index.php/device/get_last_point';
+            var url = base_url + 'device/get_last_point';
             $.getJSON(url, function (points) {
                 $.each(points, function (i, r) {
                     addMarker(r)
@@ -178,7 +178,7 @@ echo js_asset('mapsettings.js', 'deputi3');
         function createInfoboxMain(point) {
             var paramnum = 0,
                     $ele = $(document.getElementById('infobox-main').cloneNode(true)),
-                    chartUrl=base_url+'index.php/chart/' + point.sensor_id;
+                    chartUrl=base_url+'chart/' + point.sensor_id;
             // header
             $ele.find('#main-title').html(getTitle(paramnum));
             $ele.find('#main-value').html(getParamValue(paramnum, point));
@@ -227,7 +227,7 @@ echo js_asset('mapsettings.js', 'deputi3');
                 var from = $('#date-timepicker-from').data('DateTimePicker').date();
                 var to = $('#date-timepicker-to').data('DateTimePicker').date();
                 if (from != null && to != null) {
-                    $.getJSON(base_url + 'index.php/device/get_average/' + from + '/' + to, function (data) {
+                    $.getJSON(base_url + 'device/get_average/' + from + '/' + to, function (data) {
                         var $panel = $('#average-panel');
                         $panel.find('#num').html(data.num);
                         if (data.num > 0) {
