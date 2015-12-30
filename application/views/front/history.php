@@ -3,7 +3,7 @@ echo css_asset('bootstrap-datetimepicker.css', 'ace');
 echo js_asset('date-time/moment.js', 'ace');
 echo js_asset('date-time/bs3-dtp4.js', 'ace');
 echo js_asset('jquery.easypiechart.js', 'ace');
-echo js_asset('jsclusterer/src/markerclusterer_compiled.js', 'deputi3');
+echo js_asset('markerclusterer_compiled.js', 'deputi3');
 ?>
 <style>
     html, body, #map { margin: 0; padding: 0; height: 100%; }

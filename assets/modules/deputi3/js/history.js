@@ -17,14 +17,18 @@ function initialize() {
     });
     map.addListener('zoom_changed', function () {
         ace.cookie.set('history-zoom', map.getZoom(), 3600)
-        console.log(map.getZoom())
     });
     map.addListener('center_changed', function () {
         ace.cookie.set('history-center-lat', map.getCenter().lat(), 3600)
         ace.cookie.set('history-center-lon', map.getCenter().lng(), 3600)
     });
 
-    updatePoints();
+    //load for the first time
+    //dunno why we can't reliably use map.addListenerOnce('tilesloaded'...
+    var firstTimeLoader = map.addListener('tilesloaded', function () {
+        updatePoints();
+        google.maps.event.removeListener(firstTimeLoader)
+    })
 }
 
 function getCircle(point) {
@@ -78,12 +82,12 @@ function getRemark(paramnum, pointdata) {
 function createInfoboxMain(point) {
     var paramnum = $('#sensorparam').val(),
             $ele = $(document.getElementById('infobox-main').cloneNode(true)),
-            chartUrl=base_url+'chart/' + point.sensor_id;
+            chartUrl = base_url + 'chart/' + point.sensor_id;
     // header
     $ele.find('#main-title').html(getTitle(paramnum));
     $ele.find('#main-value').html(getParamValue(paramnum, point));
     $ele.find('#main-pie').data('color', getColor(paramnum, point));
-    $ele.find('#device-source a').attr('href',chartUrl).attr('target','_blank').attr('title','See recent records')
+    $ele.find('#device-source a').attr('href', chartUrl).attr('target', '_blank').attr('title', 'See recent records')
             .find('#device-id').html(point.sensor_id);
     $ele.find('#main-remark').html(moment(point.recorded_timestamp).format('D MMM YYYY, HH:mm:ss'));
     // another param
@@ -166,7 +170,7 @@ function updatePoints() {
             $.each(points, function (i, rec) {
                 addMarker(rec);
             });
-            markerCluster = new MarkerClusterer(map, markers,{maxZoom:18});
+            markerCluster = new MarkerClusterer(map, markers, {maxZoom: 18});
         });
     }
 }
