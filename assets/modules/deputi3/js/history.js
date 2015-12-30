@@ -1,6 +1,8 @@
 var map, markerCluster;
 // array of reference of all markers
 var markers = [];
+// reference to currently open infobox
+var lastInfobox;
 
 function initialize() {
     var cookieZoom = ace.cookie.get('history-zoom')
@@ -114,34 +116,32 @@ function addMarker(point) {
         title: getTitle(point)
     });
 
-    //create infobox
-    var ib = new InfoBox({
-        content: createInfoboxMain(point),
-        alignBottom: true, //infobox di utaranya marker
-        pixelOffset: new google.maps.Size(-200, 0),
-        maxWidth: 600
-    });
-
-    google.maps.event.addListener(ib, 'domready', function () {
-        renderPie()
-    })
-
-    marker.infobox = ib;
-
     //add event handler
     google.maps.event.addListener(marker, 'click', function () {
+        //check apakah sudah ada infobox nya
+        if (!this.infobox) {
+            //belum ada, create dulu
+            //create infobox
+            var ib = new InfoBox({
+                content: createInfoboxMain(point),
+                alignBottom: true, //infobox di utaranya marker
+                pixelOffset: new google.maps.Size(-200, 0),
+                maxWidth: 600
+            });
+
+            google.maps.event.addListener(ib, 'domready', function () {
+                renderPie()
+            })
+
+            this.infobox = ib;
+        }
+        // close last opened infobox, in case it's still open
+        if (lastInfobox) {
+            lastInfobox.close();
+        }
         this.infobox.open(map, this);
-//                renderPie();
-        // reference clicked marker
-        var curMarker = this;
-        // close all other markers
-        // loop through all markers
-        $.each(markers, function (i, marker) {
-            // if marker is not the clicked marker, close the marker
-            if (marker !== curMarker) {
-                marker.infobox.close();
-            }
-        });
+        lastInfobox = this.infobox;
+
         map.panTo(marker.getPosition());
     });
     //done all, add marker to array
